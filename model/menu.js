@@ -1,20 +1,18 @@
 const { list, add, del, change } = require('../data/menu')
 const qs = require('querystring')
 
-const sendError = (res, msg) => {
-    let data = JSON.stringify({
+const sendError = (ctx, msg) => {
+    ctx.body = {
         code: 400,
         msg: msg
-    })
-    res.end(data)
+    }
 }
 
-const sendSuccess = (res, result) => {
-    let data = JSON.stringify({
+const sendSuccess = (ctx, result) => {
+    ctx.body = {
         code: 200,
         data: result
-    })
-    res.end(data)
+    }
 }
 
 // 解析http post数据
@@ -36,12 +34,12 @@ const parseReceivedData = (req) => {
 }
 
 module.exports = {
-    async list(req, res) {
+    async list(ctx, next) {
         try {
             let data = await list()
-            sendSuccess(res, data)
+            sendSuccess(ctx, data)
         } catch (error) {
-            sendError(res, error)
+            sendError(ctx, error)
         }
     },
     async add(req, res) {
